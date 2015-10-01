@@ -158,7 +158,20 @@ class PostTypes
 			$city = get_post_meta($post_id, 'wpsl_city', true);
 			$state = get_post_meta($post_id, 'wpsl_state', true);
 			$zip = get_post_meta($post_id, 'wpsl_zip', true);
-			echo $address . '<br />' . $city . ', ' . $state . ' ' . $zip;
+
+			echo $address;
+
+			if(!empty($city)) {
+				echo '<br />' . $city;
+			}
+
+			if(!empty($state)) {
+				echo ', ' . $state;
+			}
+
+			if(!empty($zip)) {
+				echo ', ' . $zip;
+			}
 		}
 		if ( $column_name == 'phone' ){
 			echo get_post_meta($post_id, 'wpsl_phone', true);
