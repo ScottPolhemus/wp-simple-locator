@@ -47,7 +47,11 @@ jQuery(function($){
 
 $(document).ready(function(){
 	enable_autocomplete();
-	queue_default_map();
+	append_geo_button();
+
+	$('.simple-locator-form').each(function(){
+		generate_nonce($(this), queue_default_map);
+	});
 });
 
 
@@ -115,14 +119,16 @@ $('.wpslsubmit').on('click', function(e){
 
 	$(formelements.results).empty().addClass('loading').show();
 
-	generate_nonce(form, formelements, true);
+	generate_nonce(form, function(){
+		geocodeAddress(formelements);
+	});
 });
 
 
 /**
 * Generate and Inject the Nonce
 */
-function generate_nonce(form, formelements, processform)
+function generate_nonce(form, callback)
 {
 	$.ajax({
 		url: wpsl_locator.ajaxurl,
@@ -134,7 +140,7 @@ function generate_nonce(form, formelements, processform)
 		success: function(data){
 			$('.locator-nonce').remove();
 			$(form).find('form').append('<input type="hidden" class="locator-nonce" name="nonce" value="' + data.nonce + '" />');
-			if ( processform ) geocodeAddress(formelements);
+			if ( typeof callback === 'function' ) callback();
 		}
 	});
 }
@@ -491,13 +497,6 @@ function process_geo_button(position, formelements)
 	
 	sendFormData(formelements);
 }
-
-$(document).ready(function(){
-	append_geo_button();
-	$('.simple-locator-form').each(function(){
-		generate_nonce($(this));
-	});
-});
 
 $(document).on('click', '.wpsl-geo-button', function(e){
 	e.preventDefault();
