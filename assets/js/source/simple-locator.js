@@ -104,6 +104,12 @@ function default_load_results()
 // Process the Search Form
 $('.wpslsubmit').on('click', function(e){
 	e.preventDefault();
+
+	if($('input[name="address"]').val() == '') {
+		$('.wpsl-geo-button').trigger('click');
+		return;
+	}
+
 	geolocation = false;
 	var form = $(this).parents('.simple-locator-form');
 	active_form = form;
